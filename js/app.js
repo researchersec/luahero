@@ -33,7 +33,7 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
 function createIssue(title, body) {
     const token = prompt("Enter your GitHub Personal Access Token:");
 
-    fetch('https://api.github.com/repos/your-username/your-username.github.io/issues', {
+    fetch('https://api.github.com/repos/researchersec/luahero/issues', {
         method: 'POST',
         headers: {
             'Authorization': `token ${token}`,
@@ -44,7 +44,11 @@ function createIssue(title, body) {
             body: body
         })
     }).then(response => response.json()).then(data => {
-        console.log('Issue created:', data);
+        if (data.message === "Not Found") {
+            console.error('Error creating issue:', data);
+        } else {
+            console.log('Issue created:', data);
+        }
     }).catch(error => {
         console.error('Error creating issue:', error);
     });
