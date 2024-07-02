@@ -31,10 +31,12 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
 });
 
 function createIssue(title, body) {
+    const token = prompt("Enter your GitHub Personal Access Token:");
+
     fetch('https://api.github.com/repos/your-username/your-username.github.io/issues', {
         method: 'POST',
         headers: {
-            'Authorization': 'token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN',
+            'Authorization': `token ${token}`,
             'Accept': 'application/vnd.github.v3+json'
         },
         body: JSON.stringify({
