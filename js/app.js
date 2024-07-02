@@ -19,16 +19,30 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
         const reader = new FileReader();
         reader.onload = () => {
             const fileContent = reader.result;
-            const issueTitle = 'upload';
-            const issueBody = `User: ${user}\nFile Content: ${fileContent}`;
-
-            createIssue(issueTitle, issueBody);
+            if (fileContent.length > 65536) {
+                splitAndCreateIssues(user, fileContent);
+            } else {
+                const issueTitle = 'upload';
+                const issueBody = `User: ${user}\nFile Content: ${fileContent}`;
+                createIssue(issueTitle, issueBody);
+            }
         };
         reader.readAsText(file);
     } else {
         console.error('No user or file selected');
     }
 });
+
+function splitAndCreateIssues(user, fileContent) {
+    const maxLength = 65536;
+    const parts = Math.ceil(fileContent.length / maxLength);
+    for (let i = 0; i < parts; i++) {
+        const partContent = fileContent.slice(i * maxLength, (i + 1) * maxLength);
+        const issueTitle = `upload part ${i + 1}`;
+        const issueBody = `User: ${user}\nFile Content: ${partContent}`;
+        createIssue(issueTitle, issueBody);
+    }
+}
 
 function createIssue(title, body) {
     const token = prompt("Enter your GitHub Personal Access Token:");
