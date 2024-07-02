@@ -44,8 +44,8 @@ function createIssue(title, body) {
             body: body
         })
     }).then(response => response.json()).then(data => {
-        if (data.message === "Not Found") {
-            console.error('Error creating issue:', data);
+        if (data.message === "Bad credentials") {
+            console.error('Error creating issue: Bad credentials', data);
         } else {
             console.log('Issue created:', data);
         }
