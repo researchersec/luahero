@@ -1,3 +1,5 @@
+let loggedInUser = null; // Global variable to store logged-in user information
+
 document.getElementById('registerBtn').addEventListener('click', () => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -8,40 +10,53 @@ document.getElementById('registerBtn').addEventListener('click', () => {
 });
 
 document.getElementById('loginBtn').addEventListener('click', () => {
-    // Implement login by checking the stored user data in issues
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    // Simulate login validation (replace with actual authentication logic)
+    if (email === 'hojlund@hojlund.dk' && password === 'testing123!') {
+        loggedInUser = email; // Set logged-in user
+        console.log('Logged in as:', loggedInUser);
+        alert('Login successful!');
+    } else {
+        console.error('Invalid credentials');
+        alert('Login failed. Invalid credentials.');
+    }
 });
 
 document.getElementById('uploadBtn').addEventListener('click', () => {
     const file = document.getElementById('fileInput').files[0];
-    const user = 'example-user'; // Get the logged-in user's info
 
-    if (user && file) {
+    if (!loggedInUser) {
+        alert('Please log in before uploading');
+        return;
+    }
+
+    if (file) {
         const reader = new FileReader();
         reader.onload = () => {
             const fileContent = reader.result;
-            if (fileContent.length > 65536) {
-                splitAndCreateIssues(user, fileContent);
-            } else {
-                const issueTitle = 'upload';
-                const issueBody = `User: ${user}\nFile Content: ${fileContent}`;
-                createIssue(issueTitle, issueBody);
-            }
+            splitAndCreateIssues(loggedInUser, fileContent);
         };
         reader.readAsText(file);
     } else {
-        console.error('No user or file selected');
+        console.error('No file selected');
+        alert('Please select a file to upload');
     }
 });
 
 function splitAndCreateIssues(user, fileContent) {
     const maxLength = 65536;
-    const parts = Math.ceil(fileContent.length / maxLength);
-    for (let i = 0; i < parts; i++) {
-        const partContent = fileContent.slice(i * maxLength, (i + 1) * maxLength);
-        const issueTitle = `upload part ${i + 1}`;
-        const issueBody = `User: ${user}\nFile Content: ${partContent}`;
-        createIssue(issueTitle, issueBody);
+    const chunks = [];
+    for (let i = 0; i < fileContent.length; i += maxLength) {
+        chunks.push(fileContent.slice(i, i + maxLength));
     }
+
+    chunks.forEach((chunk, index) => {
+        const issueTitle = `upload part ${index + 1}`;
+        const issueBody = `User: ${user}\nFile Content: ${chunk}`;
+        createIssue(issueTitle, issueBody);
+    });
 }
 
 function createIssue(title, body) {
