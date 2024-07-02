@@ -9,16 +9,16 @@
 <body>
     <div id="app">
         <h1>Lua Uploader</h1>
-        <div id="auth-section">
+        <form id="auth-section">
             <h2>Register / Login</h2>
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Password">
-            <button id="registerBtn">Register</button>
-            <button id="loginBtn">Login</button>
-        </div>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="button" id="registerBtn">Register</button>
+            <button type="button" id="loginBtn">Login</button>
+        </form>
         <div id="upload-section" style="display:none;">
             <h2>Upload Lua File</h2>
-            <input type="file" id="fileInput">
+            <input type="file" id="fileInput" accept=".lua">
             <button id="uploadBtn">Upload</button>
         </div>
         <div id="profile-section" style="display:none;">
