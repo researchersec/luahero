@@ -33,6 +33,11 @@ document.getElementById('uploadBtn').addEventListener('click', () => {
 function createIssue(title, body) {
     const token = prompt("Enter your GitHub Personal Access Token:");
 
+    if (!title || !body) {
+        console.error('Title or body is empty');
+        return;
+    }
+
     fetch('https://api.github.com/repos/researchersec/luahero/issues', {
         method: 'POST',
         headers: {
@@ -46,6 +51,8 @@ function createIssue(title, body) {
     }).then(response => response.json()).then(data => {
         if (data.message === "Bad credentials") {
             console.error('Error creating issue: Bad credentials', data);
+        } else if (data.errors) {
+            console.error('Validation Failed:', data.errors);
         } else {
             console.log('Issue created:', data);
         }
