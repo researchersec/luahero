@@ -19,21 +19,21 @@ jobs:
           ISSUE_BODY=$(cat $GITHUB_EVENT_PATH | jq -r .issue.body)
           ISSUE_TITLE=$(cat $GITHUB_EVENT_PATH | jq -r .issue.title)
 
+          echo "ISSUE_TITLE=${ISSUE_TITLE}"
+          echo "ISSUE_BODY=${ISSUE_BODY}"
+
           if [[ "$ISSUE_TITLE" == "register" ]]; then
             EMAIL=$(echo "$ISSUE_BODY" | grep "Email:" | awk '{print $2}')
             PASSWORD=$(echo "$ISSUE_BODY" | grep "Password:" | awk '{print $2}')
 
-            # Encrypt password and store user data in issues or a private repo
             echo "::set-output name=email::$EMAIL"
             echo "::set-output name=password::$PASSWORD"
-            # Here you can add code to handle registration, such as storing encrypted passwords
           fi
 
           if [[ "$ISSUE_TITLE" == "upload" ]]; then
             USER=$(echo "$ISSUE_BODY" | grep "User:" | awk '{print $2}')
-            FILE_CONTENT=$(echo "$ISSUE_BODY" | grep "File Content:" | awk '{print $3}')
+            FILE_CONTENT=$(echo "$ISSUE_BODY" | grep "File Content:" | awk -F "File Content: " '{print $2}')
 
-            # Store the file content in a specific format or database (using another action or API call)
             echo "::set-output name=user::$USER"
             echo "::set-output name=file_content::$FILE_CONTENT"
           fi
